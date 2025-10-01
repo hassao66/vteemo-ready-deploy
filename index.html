@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VTEEMO - Premium Video Platform</title>
+    <meta name="description" content="VTEEMO - The ultimate premium video streaming platform">
+    
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23FFD700'%3e%3cpath d='m14 6-1-2H5v17h2v-7h5l1 2h7V6h-6Z'/%3e%3c/svg%3e" />
+    <meta name="theme-color" content="#6A0DAD">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --purple-primary: #6A0DAD;
+            --purple-secondary: #4B0082;
+            --gold: #FFD700;
+            --gold-secondary: #FFA500;
+            --dark-bg: #111827;
+            --gray-800: #1f2937;
+            --gray-700: #374151;
+            --gray-300: #d1d5db;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--dark-bg);
+            color: white;
+            line-height: 1.6;
+        }
+        
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, var(--purple-primary) 0%, var(--purple-secondary) 100%);
+            padding: 1rem 0;
+            box-shadow: 0 4px 20px rgba(106, 13, 173, 0.3);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+        
+        .logo {
+            font-size: 2rem;
+            font-weight: 800;
+            background: linear-gradient(45deg, var(--gold), var(--gold-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .search-bar {
+            flex: 1;
+            max-width: 500px;
+            margin: 0 2rem;
+            position: relative;
+        }
+        
+        .search-input {
+            width: 100%;
+            padding: 0.75rem 3rem 0.75rem 1rem;
+            border: none;
+            border-radius: 25px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 1rem;
+            backdrop-filter: blur(10px);
+        }
+        
+        .search-input::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+        
+        .search-btn {
+            position: absolute;
+            right: 0.5rem;
+            top: 50%;
+            transform: translateY(-50%);
+            background: var(--gold);
+            color: var(--dark-bg);
+            border: none;
+            padding: 0.5rem;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .btn-premium {
+            background: linear-gradient(45deg, var(--gold), var(--gold-secondary));
+            color: var(--dark-bg);
+        }
+        
+        .btn-premium:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 215, 0, 0.4);
+        }
+        
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        /* Main Layout */
+        .main-container {
+            display: flex;
+            min-height: calc(100vh - 73px);
+        }
+        
+        /* Sidebar */
+        .sidebar {
+            width: 250px;
+            background: var(--gray-800);
+            border-right: 1px solid var(--gray-700);
+            padding: 1.5rem;
+            overflow-y: auto;
+        }
+        
+        .sidebar-section {
+            margin-bottom: 2rem;
+        }
+        
+        .sidebar-title {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--gray-300);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 1rem;
+        }
+        
+        .sidebar-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem;
+            border-radius: 8px;
+            color: var(--gray-300);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            margin-bottom: 0.5rem;
+        }
+        
+        .sidebar-item:hover,
+        .sidebar-item.active {
+            background: linear-gradient(135deg, var(--purple-primary), var(--purple-secondary));
+            color: white;
+            transform: translateX(5px);
+        }
+        
+        .sidebar-item.premium {
+            background: linear-gradient(45deg, var(--gold), var(--gold-secondary));
+            color: var(--dark-bg);
+            font-weight: 700;
+        }
+        
+        .sidebar-item.premium:hover {
+            transform: translateX(5px) scale(1.02);
+            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.3);
+        }
+        
+        /* Content Area */
+        .content {
+            flex: 1;
+            padding: 2rem;
+        }
+        
+        .content-header {
+            margin-bottom: 2rem;
+        }
+        
+        .content-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(45deg, var(--gold), var(--gold-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .content-subtitle {
+            color: var(--gray-300);
+            font-size: 1.1rem;
+        }
+        
+        /* Video Grid */
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 2rem;
+        }
+        
+        .video-card {
+            background: rgba(106, 13, 173, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(106, 13, 173, 0.2);
+            border-radius: 15px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .video-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(106, 13, 173, 0.3);
+            border-color: var(--gold);
+        }
+        
+        .video-thumbnail {
+            position: relative;
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(45deg, var(--gray-700), var(--gray-800));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: var(--gray-300);
+        }
+        
+        .video-duration {
+            position: absolute;
+            bottom: 8px;
+            right: 8px;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .premium-badge {
+            position: absolute;
+            top: 8px;
+            left: 8px;
+            background: linear-gradient(45deg, var(--gold), var(--gold-secondary));
+            color: var(--dark-bg);
+            padding: 0.25rem 0.5rem;
+            border-radius: 15px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+        
+        .video-info {
+            padding: 1.5rem;
+        }
+        
+        .video-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: white;
+            line-height: 1.4;
+        }
+        
+        .video-channel {
+            color: var(--gray-300);
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .verified-badge {
+            color: var(--purple-primary);
+            font-size: 0.8rem;
+        }
+        
+        .video-stats {
+            color: var(--gray-300);
+            font-size: 0.85rem;
+            display: flex;
+            gap: 1rem;
+        }
+        
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .sidebar {
+                width: 200px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+                padding: 1rem;
+            }
+            
+            .search-bar {
+                margin: 0;
+                max-width: 100%;
+            }
+            
+            .main-container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                display: none;
+            }
+            
+            .content {
+                padding: 1rem;
+            }
+            
+            .video-grid {
+                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+                gap: 1rem;
+            }
+        }
+        
+        /* Loading Animation */
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        
+        .loading {
+            animation: pulse 2s infinite;
+        }
+        
+        /* Status Indicator */
+        .status-indicator {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #10b981;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+            z-index: 1001;
+        }
+    </style>
+</head>
+<body>
+    <div class="status-indicator">✅ VTEEMO Live</div>
+    
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">VTEEMO</div>
+            
+            <div class="search-bar">
+                <input type="text" class="search-input" placeholder="Search videos...">
+                <button class="search-btn">🔍</button>
+            </div>
+            
+            <div class="header-actions">
+                <a href="#premium" class="btn btn-premium">👑 Premium</a>
+                <a href="#upload" class="btn btn-secondary">📤 Upload</a>
+                <a href="#login" class="btn btn-secondary">Login</a>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Main Container -->
+    <div class="main-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-section">
+                <div class="sidebar-title">Main</div>
+                <a href="#home" class="sidebar-item active">
+                    🏠 <span>Home</span>
+                </a>
+                <a href="#trending" class="sidebar-item">
+                    📈 <span>Trending</span>
+                </a>
+                <a href="#subscriptions" class="sidebar-item">
+                    📺 <span>Subscriptions</span>
+                </a>
+            </div>
+            
+            <div class="sidebar-section">
+                <div class="sidebar-title">Categories</div>
+                <a href="#music" class="sidebar-item">
+                    🎵 <span>Music</span>
+                </a>
+                <a href="#gaming" class="sidebar-item">
+                    🎮 <span>Gaming</span>
+                </a>
+                <a href="#movies" class="sidebar-item">
+                    🎬 <span>Movies</span>
+                </a>
+                <a href="#sports" class="sidebar-item">
+                    🏆 <span>Sports</span>
+                </a>
+            </div>
+            
+            <div class="sidebar-section">
+                <div class="sidebar-title">Premium</div>
+                <a href="#premium" class="sidebar-item premium">
+                    👑 <span>Premium Content</span>
+                </a>
+                <a href="#rewards" class="sidebar-item">
+                    🎁 <span>Rewards</span>
+                </a>
+            </div>
+        </aside>
+        
+        <!-- Content -->
+        <main class="content">
+            <div class="content-header">
+                <h1 class="content-title">Featured Videos</h1>
+                <p class="content-subtitle">Discover premium content and trending videos</p>
+            </div>
+            
+            <div class="video-grid" id="videoGrid">
+                <!-- Videos will be loaded here -->
+            </div>
+        </main>
+    </div>
+    
+    <script>
+        console.log('🚀 VTEEMO Platform Loaded Successfully!');
+        
+        // Sample video data
+        const videos = [
+            {
+                id: 1,
+                title: "Amazing Sunset Timelapse in 4K - Premium Content",
+                channel: "Nature Films",
+                verified: true,
+                views: "2.5M views",
+                time: "2 days ago",
+                duration: "3:45",
+                isPremium: true
+            },
+            {
+                id: 2,
+                title: "Modern Web Development Tutorial - React & TypeScript",
+                channel: "Code Academy",
+                verified: true,
+                views: "850K views",
+                time: "1 week ago",
+                duration: "15:20",
+                isPremium: false
+            },
+            {
+                id: 3,
+                title: "Cooking the Perfect Pasta - Italian Style",
+                channel: "Chef's Kitchen",
+                verified: false,
+                views: "1.2M views",
+                time: "3 days ago",
+                duration: "8:15",
+                isPremium: false
+            },
+            {
+                id: 4,
+                title: "Epic Gaming Montage - Premium Highlights",
+                channel: "Pro Gamer",
+                verified: true,
+                views: "3.2M views",
+                time: "5 days ago",
+                duration: "12:30",
+                isPremium: true
+            },
+            {
+                id: 5,
+                title: "Relaxing Music for Study and Work",
+                channel: "Peaceful Sounds",
+                verified: true,
+                views: "5.6M views",
+                time: "1 week ago",
+                duration: "45:00",
+                isPremium: false
+            },
+            {
+                id: 6,
+                title: "Travel Vlog: Exploring Japan - Premium Edition",
+                channel: "Travel Stories",
+                verified: true,
+                views: "1.8M views",
+                time: "4 days ago",
+                duration: "22:15",
+                isPremium: true
+            }
+        ];
+        
+        // Render videos
+        function renderVideos() {
+            const grid = document.getElementById('videoGrid');
+            
+            videos.forEach(video => {
+                const videoCard = document.createElement('div');
+                videoCard.className = 'video-card';
+                videoCard.innerHTML = `
+                    <div class="video-thumbnail">
+                        🎥
+                        <div class="video-duration">${video.duration}</div>
+                        ${video.isPremium ? '<div class="premium-badge">👑 Premium</div>' : ''}
+                    </div>
+                    <div class="video-info">
+                        <h3 class="video-title">${video.title}</h3>
+                        <div class="video-channel">
+                            ${video.channel}
+                            ${video.verified ? '<span class="verified-badge">✓</span>' : ''}
+                        </div>
+                        <div class="video-stats">
+                            <span>${video.views}</span>
+                            <span>${video.time}</span>
+                        </div>
+                    </div>
+                `;
+                
+                videoCard.addEventListener('click', () => {
+                    alert(`Playing: ${video.title}`);
+                });
+                
+                grid.appendChild(videoCard);
+            });
+        }
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            renderVideos();
+            
+            // Add search functionality
+            document.querySelector('.search-input').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    const query = e.target.value;
+                    alert(`Searching for: ${query}`);
+                }
+            });
+            
+            // Add button functionality
+            document.querySelectorAll('.btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const text = btn.textContent.trim();
+                    alert(`${text} feature coming soon!`);
+                });
+            });
+        });
+        
+        console.log('✅ VTEEMO Ready for vteemo.com deployment');
+    </script>
+</body>
+</html>
