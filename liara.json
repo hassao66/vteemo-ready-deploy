@@ -1,0 +1,6 @@
+{
+  "app": "vteemo",  
+  "platform": "static",
+  "spa": true,
+  "fallback": "index.html"
+}
